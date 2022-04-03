@@ -1,0 +1,13 @@
+FROM confluentinc/cp-kafka-connect-base:6.2.0
+EXPOSE 8083
+
+USER root 
+RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:1.8.1
+# RUN confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
+
+COPY connect_liveness.sh .
+COPY create_connector.sh .
+RUN chmod 755 create_connector.sh
+CMD [ "./create_connector.sh" ]
+
+# COPY --chown=root:root plugins /usr/share/confluent-hub-components/debezium-debezium-connector-postgresql/lib/
